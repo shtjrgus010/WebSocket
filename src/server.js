@@ -21,5 +21,12 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({server});
 // http와 websockt 서버는 동시에 생성 가능
 
+//Event
+// sever.js 의 socket은 연결된 브라우저
+function handleConnection(socket) {
+    console.log(socket);
+}
+wss.on("connection", handleConnection);
+
 server.listen(3000, handleListen);
 
