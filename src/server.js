@@ -23,10 +23,19 @@ const wss = new WebSocketServer({server});
 
 //Event
 // sever.js 의 socket은 연결된 브라우저
-function handleConnection(socket) {
-    console.log(socket);
-}
-wss.on("connection", handleConnection);
+// function handleConnection(socket) {
+//     console.log(socket);
+// }
+
+wss.on("connection", (socket) => {
+    console.log("Connected to Browswer. ✅");
+    socket.on("close", () => console.log(console.log("Disconnected from Browser ❎")))
+    socket.on("message", (message) => {
+        // 버전이 달라서 변형
+        console.log(message.toString('utf-8'));
+    });
+    socket.send("hello!!");
+});
 
 server.listen(3000, handleListen);
 
