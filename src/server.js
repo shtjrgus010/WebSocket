@@ -27,14 +27,24 @@ const wss = new WebSocketServer({server});
 //     console.log(socket);
 // }
 
+// socket.send => back-end 에서 front-end 로 전달
+
+function onSocketClose() {
+    console.log("Disconnected from Browser ❎")
+}
+
+//fake database
+const sockets = [];
+
 wss.on("connection", (socket) => {
+    // socket: 다른 브라우저를 sockets 배열에 추가 및 저장
+    sockets.push(socket);
     console.log("Connected to Browswer. ✅");
-    socket.on("close", () => console.log(console.log("Disconnected from Browser ❎")))
+    socket.on("close", onSocketClose);
     socket.on("message", (message) => {
-        // 버전이 달라서 변형
-        console.log(message.toString('utf-8'));
+        sockets.forEach((aSocket) => aSocket.send(message));
+        socket.send(message.toString('utf-8'))
     });
-    socket.send("hello!!");
 });
 
 server.listen(3000, handleListen);
