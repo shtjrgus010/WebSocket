@@ -2,9 +2,9 @@ import express from "express";
 import http from "http";
 import {Server} from "socket.io";
 //import WebSocket, {WebSocketServer} from "ws";
-import { fileURLToPath } from "url"; 
+import { fileURLToPath } from "url";
 
-const __dirname = fileURLToPath(new URL(".", import.meta.url)); 
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const app = express();
 
 app.set("view engine", "pug");
@@ -21,13 +21,13 @@ const wsServer = new Server(httpserver);
 
 
 wsServer.on("connection", (socket) => {
-    socket.on("enter_room", (msg, done) => {
-        console.log(msg);
-        setTimeout(() => {
-            done();
-        }, 10000);
+    socket.onAny((event) => {
+        console.log(`Socket Event: ${event}`);
     });
-    
+    socket.on("enter_room", (roomName, done) => {
+        socket.join(roomName);
+            done();
+    });
 });
 //websocket 서버 생성
 // http와 websockt 서버는 동시에 생성 가능
@@ -57,7 +57,7 @@ wsServer.on("connection", (socket) => {
 //             case "nickname":
 //                 socket["nickname"] = message.payload;
 //         }
-        
+
 //     });
 // });
 
